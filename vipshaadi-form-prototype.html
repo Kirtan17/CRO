@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Shaadi — Optimized consultation form</title>
+<style>
+  :root{
+    --purple:#3C2A63;
+    --purple-deep:#2A1D47;
+    --purple-soft:#EEEAF4;
+    --gold:#B08D3F;
+    --gold-soft:#F3ECDC;
+    --ink:#2A1D47;
+    --muted:#6B6478;
+    --faint:#8A8397;
+    --line:#E4E0EC;
+    --ok:#2E7D5B;
+    --ok-bg:#E7F3EC;
+    --err:#B4322A;
+    --page:#F6F4F0;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--page);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  .serif{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+
+  header.nav{background:var(--purple);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1080px;margin:0 auto;}
+  .logo{font-size:17px;font-weight:700;letter-spacing:.08em;color:#fff;}
+  .logo span{color:var(--gold);}
+  .nav-links{display:flex;gap:22px;}
+  .nav-links a{font-size:13px;color:#D9D2E6;text-decoration:none;}
+  .nav-links a:hover{color:#fff;}
+  .nav-cta{background:var(--gold);color:var(--purple-deep);border-radius:7px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;padding:7px 15px;}
+  .nav-cta-ico{font-size:17px;line-height:1;}
+  .nav-cta-txt{display:flex;flex-direction:column;line-height:1.15;}
+  .nav-cta-top{font-size:11px;font-weight:600;opacity:.85;}
+  .nav-cta-num{font-size:14px;font-weight:700;letter-spacing:.01em;}
+  @media(max-width:720px){.nav-links{display:none;}}
+
+  .hero{background:var(--purple-deep);padding:44px 0 48px;}
+  .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:44px;align-items:start;}
+  .hero-copy{padding-top:6px;}
+  .eyebrow{font-size:11px;letter-spacing:.16em;color:var(--gold);margin:0 0 14px;text-transform:uppercase;}
+  .hero h1{font-size:46px;line-height:1.1;font-weight:600;color:#fff;margin:0 0 16px;letter-spacing:-.01em;}
+  .hero p.lede{font-size:15px;color:#C9C1DA;margin:0 0 22px;max-width:44ch;}
+  .formcard{background:var(--card);border-radius:14px;padding:22px;box-shadow:0 18px 40px rgba(42,29,71,.22);align-self:start;justify-self:end;width:100%;max-width:400px;}
+  @media(max-width:860px){
+    .hero-grid{display:flex;flex-direction:column;gap:22px;}
+    .hero h1{font-size:34px;margin:0;}
+    .hero-copy{display:contents;}
+    .hero .eyebrow{order:1;}
+    .hero h1{order:2;}
+    .formcard{order:3;justify-self:stretch;max-width:none;margin:0;}
+    .hero .lede{order:4;margin:0;}
+    .hero .assurances{order:5;}
+  }
+  .assurances{display:flex;gap:10px;flex-wrap:wrap;}
+  .assurance{display:inline-flex;align-items:center;gap:6px;background:rgba(176,141,63,.16);color:var(--gold);font-size:12px;padding:7px 12px;border-radius:6px;}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:26px;}.hero h1{font-size:34px;}}
+
+  .steps{display:flex;gap:6px;margin-bottom:18px;}
+  .steps span{height:5px;flex:1;border-radius:3px;background:#E2DEEA;transition:background .3s;}
+  .steps span.on{background:var(--purple);}
+  .formcard h2{font-size:19px;font-weight:600;margin:0 0 3px;color:var(--purple-deep);}
+  .formcard .sub{font-size:12.5px;color:var(--muted);margin:0 0 16px;}
+  label.fl{display:block;font-size:12px;color:var(--muted);margin:0 0 5px;font-weight:500;}
+  .field{margin-bottom:13px;}
+  input,select{
+    width:100%;font-size:14px;font-family:inherit;color:var(--ink);
+    padding:11px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  input::placeholder{color:var(--faint);}
+  input:focus,select:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(60,42,99,.12);}
+  input.bad,select.bad{border-color:var(--err);box-shadow:0 0 0 3px rgba(180,50,42,.10);}
+  .err-msg{font-size:11.5px;color:var(--err);margin:5px 0 0;display:none;}
+  .err-msg.show{display:block;}
+  .row2{display:flex;gap:10px;}
+  .row2>.field{flex:1;margin-bottom:13px;}
+
+  .btn-primary{
+    width:100%;background:var(--purple);color:#fff;border:none;font-family:inherit;
+    font-size:15px;font-weight:600;padding:14px;border-radius:7px;cursor:pointer;
+    transition:background .15s,transform .05s;
+  }
+  .btn-primary:hover{background:#4a3578;}
+  .btn-primary:active{transform:scale(.99);}
+  .btn-gold{background:var(--gold);color:var(--purple-deep);}
+  .btn-gold:hover{background:#c29e4c;}
+  .privacy{font-size:10.5px;color:var(--faint);text-align:center;margin:11px 0 0;}
+  .skip{font-size:11.5px;color:var(--muted);text-align:center;margin:11px 0 0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  .skip:hover{color:var(--purple);}
+
+  .received{display:flex;align-items:center;gap:8px;background:var(--purple-soft);border-radius:8px;padding:10px 12px;margin-bottom:16px;}
+  .received .tick{width:20px;height:20px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+  .received span{font-size:12.5px;color:var(--purple-deep);}
+
+  .done{text-align:center;padding:12px 0 4px;}
+  .done .big{width:52px;height:52px;border-radius:50%;background:var(--ok-bg);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;}
+  .done h2{font-size:20px;color:var(--purple-deep);margin:0 0 6px;}
+  .done p{font-size:13px;color:var(--muted);margin:0 auto;max-width:34ch;}
+
+  .stripe{background:var(--gold-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .stripe-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:22px 0;}
+  .stat{text-align:center;}
+  .stat .n{font-size:26px;font-weight:600;color:var(--purple-deep);}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:2px;}
+  @media(max-width:620px){.stripe-grid{grid-template-columns:repeat(2,1fr);gap:18px;}}
+
+  section.block{padding:40px 0;}
+  .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;}
+  h3.blocktitle{font-size:26px;font-weight:600;color:var(--purple-deep);margin:0 0 6px;letter-spacing:-.01em;}
+  p.blocksub{font-size:14px;color:var(--muted);margin:0 0 24px;}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .stepcard{background:var(--purple-soft);border-radius:12px;padding:20px;}
+  .stepcard .num{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--gold);line-height:1;margin-bottom:8px;}
+  .stepcard h4{font-size:15px;font-weight:600;color:var(--purple-deep);margin:0 0 6px;}
+  .stepcard p{font-size:12.5px;color:var(--muted);margin:0;}
+  @media(max-width:720px){.three{grid-template-columns:1fr;}}
+
+  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .tcard{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff;}
+  .tcard .who{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .tcard .av{width:38px;height:38px;border-radius:50%;background:var(--purple-soft);flex-shrink:0;}
+  .tcard .nm{font-size:13px;font-weight:600;color:var(--purple-deep);}
+  .tcard .loc{font-size:11px;color:var(--faint);}
+  .tcard .quote{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin:0;}
+  @media(max-width:720px){.tgrid{grid-template-columns:1fr;}}
+
+  .faq{border-top:1px solid var(--line);max-width:760px;}
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;cursor:pointer;font-size:15px;color:var(--purple-deep);list-style:none;}
+  .faq-q::-webkit-details-marker{display:none;}
+  .faq-q .chev{color:var(--gold);font-size:18px;transition:transform .2s;flex-shrink:0;}
+  details[open] .faq-q .chev{transform:rotate(180deg);}
+  .faq-a{font-size:13.5px;color:var(--muted);line-height:1.65;padding:0 0 18px;margin:0;max-width:66ch;}
+
+
+  footer{background:var(--purple-deep);padding:20px 0;margin-top:8px;}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .foot-inner span{font-size:12px;color:#9A92AC;}
+
+  .sticky-cta{display:none;}
+  @media(max-width:720px){
+    .sticky-cta{display:flex;position:sticky;bottom:0;gap:8px;padding:10px 16px;background:#fff;border-top:1px solid var(--line);z-index:20;}
+    .sticky-cta a{flex:1;text-align:center;text-decoration:none;font-size:14px;font-weight:600;padding:12px;border-radius:7px;}
+    .sticky-cta .s-primary{background:var(--purple);color:#fff;}
+    .sticky-cta .s-call{flex:0 0 auto;background:#fff;color:var(--purple-deep);border:1px solid var(--purple);display:inline-flex;align-items:center;gap:5px;padding:12px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo">VIP<span>SHAADI</span></div>
+    <nav class="nav-links">
+      <a href="#why">Why VIP Shaadi</a>
+      <a href="#process">The process</a>
+      <a href="#stories">Success stories</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <a href="tel:+919000012345" class="nav-cta"><span class="nav-cta-ico">✆</span><span class="nav-cta-txt"><span class="nav-cta-top">Talk to our experts</span><span class="nav-cta-num">+91 90000 12345</span></span></a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">By Shaadi.com · Established 1996</p>
+      <h1 class="serif">A matchmaker who does the searching for you.</h1>
+      <p class="lede">No endless profiles or cold outreach. Your consultant curates a discreet, verified shortlist — each introduction chosen for compatibility, background, and the life you've built.</p>
+      <div class="assurances">
+        <span class="assurance">✓ Verified profiles</span>
+        <span class="assurance">✦ Complete confidentiality</span>
+      </div>
+    </div>
+
+    <div class="formcard" id="form">
+      <div class="steps"><span class="on" id="d1"></span><span id="d2"></span></div>
+
+      <div id="step1">
+        <h2>Book a free consultation</h2>
+        <p class="sub">Three details to begin. A consultant will call you back.</p>
+        <div class="field">
+          <label class="fl" for="name">Full name</label>
+          <input type="text" id="name" placeholder="Your full name" autocomplete="name">
+          <p class="err-msg" id="e-name">Please enter your name.</p>
+        </div>
+        <div class="field">
+          <label class="fl" for="phone">Contact number</label>
+          <input type="tel" id="phone" placeholder="e.g. 98765 43210" autocomplete="tel">
+          <p class="err-msg" id="e-phone">Please enter a valid phone number.</p>
+        </div>
+        <div class="field">
+          <label class="fl" for="seeking">I am looking for</label>
+          <select id="seeking">
+            <option value="">Select</option>
+            <option>A bride</option>
+            <option>A groom</option>
+          </select>
+          <p class="err-msg" id="e-seeking">Please make a selection.</p>
+        </div>
+        <button class="btn-primary" onclick="submitStep1()">Book a free consultation</button>
+        <p class="privacy">🔒 Your information is held in strict confidence.</p>
+      </div>
+
+      <div id="step2" style="display:none;">
+        <div class="received"><span class="tick">✓</span><span>Request received. A consultant will call you shortly.</span></div>
+        <h2>Help us prepare</h2>
+        <p class="sub">Optional. A few details let your consultant tailor the first call.</p>
+        <div class="row2">
+          <div class="field">
+            <label class="fl" for="age">Age</label>
+            <input type="text" id="age" placeholder="Years" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label class="fl" for="lang">Mother tongue</label>
+            <select id="lang">
+              <option value="">Select</option>
+              <option>Hindi</option><option>Marathi</option><option>Gujarati</option>
+              <option>Tamil</option><option>Telugu</option><option>Punjabi</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl" for="city">City of residence</label>
+          <select id="city">
+            <option value="">Select</option>
+            <option>Mumbai</option><option>Delhi</option><option>Bengaluru</option>
+            <option>Hyderabad</option><option>Overseas</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="fl" for="income">Annual income <span style="color:var(--faint);font-weight:400;">— helps us match you appropriately</span></label>
+          <select id="income">
+            <option value="">Select a range</option>
+            <option value="lo">Under ₹10 lakh</option>
+            <option value="ok">₹10–25 lakh</option>
+            <option value="ok">₹25–50 lakh</option>
+            <option value="ok">₹50 lakh–1 crore</option>
+            <option value="ok">Above ₹1 crore</option>
+          </select>
+        </div>
+        <button class="btn-primary btn-gold" onclick="submitStep2()">Submit details</button>
+        <p class="skip" onclick="submitStep2()">Skip — I'll share these on the call</p>
+      </div>
+
+      <div id="step3" style="display:none;">
+        <div class="done">
+          <div class="big">✓</div>
+          <h2 class="serif">Thank you.</h2>
+          <p>A VIP consultant will contact you within one business day to begin your search.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stripe">
+  <div class="wrap stripe-grid">
+    <div class="stat"><div class="n">5×</div><div class="l">Higher success rate</div></div>
+    <div class="stat"><div class="n">1.6L+</div><div class="l">Members served</div></div>
+    <div class="stat"><div class="n">25+ yrs</div><div class="l">Of matchmaking</div></div>
+    <div class="stat"><div class="n">Global</div><div class="l">India and abroad</div></div>
+  </div>
+</div>
+
+<section class="block" id="process">
+  <div class="wrap">
+    <p class="kicker">The process</p>
+    <h3 class="blocktitle serif">A discreet process, managed end to end.</h3>
+    <p class="blocksub">Your consultant handles the search. You remain in control of every decision.</p>
+    <div class="three">
+      <div class="stepcard"><div class="num serif">01</div><h4>Understand your requirements</h4><p>A confidential conversation to establish your preferences, values, and expectations.</p></div>
+      <div class="stepcard"><div class="num serif">02</div><h4>Receive curated introductions</h4><p>A select shortlist of verified profiles, matched to your criteria — never an open database.</p></div>
+      <div class="stepcard"><div class="num serif">03</div><h4>Meet with assurance</h4><p>Where interest is mutual, we arrange an introduction for you and your families.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="stories" style="padding-top:8px;">
+  <div class="wrap">
+    <p class="kicker">Success stories</p>
+    <h3 class="blocktitle serif">Members who found their match.</h3>
+    <p class="blocksub">A selection of introductions made by our consultants.</p>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="who"><div class="av"></div><div><div class="nm">Pranity &amp; Shubham</div><div class="loc">Introduced in Mumbai</div></div></div>
+        <p class="quote">"The process was thorough and entirely respectful of our privacy. Every introduction was considered."</p>
+      </div>
+      <div class="tcard">
+        <div class="who"><div class="av"></div><div><div class="nm">Shivani &amp; Nilay</div><div class="loc">Introduced in Delhi</div></div></div>
+        <p class="quote">"Within a few introductions we found genuine compatibility. The precision was remarkable."</p>
+      </div>
+      <div class="tcard">
+        <div class="who"><div class="av"></div><div><div class="nm">Abhijnan &amp; Kajori</div><div class="loc">Introduced across cities</div></div></div>
+        <p class="quote">"A demanding schedule was never an obstacle. The service accommodated it with discretion."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="faq" style="padding-top:8px;">
+  <div class="wrap">
+    <p class="kicker">Questions</p>
+    <h3 class="blocktitle serif">What members ask first.</h3>
+    <p class="blocksub">Anything further is covered on your consultation call.</p>
+    <div class="faq">
+      <details class="faq-item" open>
+        <summary class="faq-q">What is the cost of membership?<span class="chev">⌄</span></summary>
+        <p class="faq-a">Membership is tailored to the level of service you require. Your consultant presents the available options during your initial consultation, with no obligation to proceed.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How is my privacy protected?<span class="chev">⌄</span></summary>
+        <p class="faq-a">Your details are held in strict confidence and are never displayed publicly. You choose what is shared, and only verified profiles matched to your criteria are introduced to you.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Who will I be introduced to?<span class="chev">⌄</span></summary>
+        <p class="faq-a">A dedicated matchmaker curates a small shortlist of verified members whose background, values, and expectations align with yours — rather than an open database you search yourself.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How does this differ from a matrimony website?<span class="chev">⌄</span></summary>
+        <p class="faq-a">A matrimony site gives you a search bar. VIP Shaadi gives you a consultant who does the searching, verifies each profile, and arranges introductions on your behalf — a managed service, not a self-serve listing.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="closing" style="padding-top:8px;">
+  <div class="wrap">
+    <div style="background:var(--purple);border-radius:14px;padding:36px 28px;text-align:center;">
+      <h3 class="serif" style="font-size:26px;color:#fff;margin:0 0 8px;font-weight:600;">Begin your search with complete discretion.</h3>
+      <p style="font-size:14px;color:#C9C1DA;margin:0 0 20px;">Request a private consultation. There is no cost and no obligation.</p>
+      <a href="#form" style="display:inline-block;background:var(--gold);color:var(--purple-deep);font-size:15px;font-weight:600;padding:13px 28px;border-radius:7px;text-decoration:none;">Book a free consultation</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 1996–2026 Shaadi.com · The World's No.1 Matchmaking Service</span>
+    <span>Prototype for client review</span>
+  </div>
+</footer>
+
+<div class="sticky-cta">
+  <a href="#form" class="s-primary">Book a free consultation</a>
+  <a href="tel:+17167107228" class="s-call">✆ Call</a>
+</div>
+
+<script>
+function markBad(id,on){
+  var el=document.getElementById(id);
+  var e=document.getElementById('e-'+id);
+  if(on){el.classList.add('bad');e.classList.add('show');}
+  else{el.classList.remove('bad');e.classList.remove('show');}
+}
+['name','phone','seeking'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',function(){markBad(id,false);});
+  document.getElementById(id).addEventListener('change',function(){markBad(id,false);});
+});
+
+function submitStep1(){
+  var ok=true;
+  var name=document.getElementById('name').value.trim();
+  var phone=document.getElementById('phone').value.replace(/\D/g,'');
+  var seeking=document.getElementById('seeking').value;
+  if(name.length<2){markBad('name',true);ok=false;}
+  if(phone.length<7){markBad('phone',true);ok=false;}
+  if(!seeking){markBad('seeking',true);ok=false;}
+  if(!ok)return;
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  document.getElementById('d2').classList.add('on');
+}
+function submitStep2(){
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='block';
+}
+
+
+</script>
+
+</body>
+</html>
